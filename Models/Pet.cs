@@ -16,6 +16,7 @@ namespace pet_hotel
         Retriever
 
     }
+    
     public enum PetColorType {
         White,
         Black,
@@ -27,27 +28,30 @@ namespace pet_hotel
 
         public int id {get; set;}
 
-        public DateTime checkedInAt {get; set;}
+        public DateTime? checkedInAt {get; set;}
 
         [Required]
         public string name {get; set;}
 
-        [ForeignKey("PetOwner")]
-        [Required]
-        public int petOwnerid {get; set;}   
+        public int petOwnerid {get; set;} 
 
-        [Required]
-        public string breed {get; set;}
+        public PetOwner petOwner {get; set;}  
+        
+        [JsonConverter(typeof(JsonStringEnumConverter))] 
+        public PetBreedType breed {get; set;}
 
-        public int petCount {get; set;}
+        // public int petCount {get; set;}
 
-        public void checkIn() {
-            petCount += 1;
-        }
+        [JsonConverter(typeof(JsonStringEnumConverter))] 
+        public PetColorType color {get; set;}
 
-        public void checkOut() {
-            petCount -= 1;
-        }
+        // public void checkIn() {
+        //     petCount += 1;
+        // }
+
+        // public void checkOut() {
+        //     petCount -= 1;
+        // }
 
     }
 }

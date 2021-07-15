@@ -23,8 +23,64 @@ namespace pet_hotel.Controllers
         // occur when the route is missing in this controller
         [HttpGet]
         public IEnumerable<Pet> GetPets() {
-            return new List<Pet>();
+            return _context.PetHotel
+            .Include(pet => pet.petOwner)
+            .OrderBy(pet => pet.name)
+            .ToList();
         }
+
+        //It's getting to our DB, but it's not passing the test...
+        [HttpPost]
+        public IActionResult Post([FromBody] Pet pet) {
+
+            _context.Add(pet);
+            _context.SaveChanges();
+
+            return CreatedAtAction(nameof(GetPets), pet);
+        }
+
+        //This is working
+        [HttpDelete("{id}")]
+        public IActionResult DeletePet(int id) {
+            Pet petToDelete = _context.PetHotel.Find(id);
+
+            if (petToDelete == null) return NotFound();
+
+            _context.PetHotel.Remove(petToDelete);
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+
+        [HttpPut("{id}/checkin")]
+        public IActionResult CheckInPet(int id) {
+             Pet petToCheckIn = _context.PetHotel.Find(id);
+            
+            if (petToCheckIn == null) return NotFound();
+
+            petToCheckIn.checkedInAt = DateTime.UtcNow;
+            // petToCheckIn.checkIn();
+            _context.Update(petToCheckIn);
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
+        [HttpPut("{id}/checkout")]
+        public IActionResult CheckOutPet(int id) {
+             Pet petToCheckIn = _context.PetHotel.Find(id);
+            
+            if (petToCheckIn == null) return NotFound();
+
+            petToCheckIn.checkedInAt = null;
+            // petToCheckIn.checkOut();
+            _context.Update(petToCheckIn);
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
+
 
         // [HttpGet]
         // [Route("test")]

@@ -19,9 +19,8 @@ namespace pet_hotel
         public string emailAddress { get; set; }
 
         // Will have to update when pet count goes up
-
+        [NotMapped]
         [JsonIgnore]
-
         public List<Pet> pets { get; set; }
 
         [NotMapped]
